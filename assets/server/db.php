@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";       // default for XAMPP
-$password = "";           // default for XAMPP
-$dbname = "eca_project"; // change this to your actual DB name
+$servername = "sql306.infinityfree.com";
+$username = "if0_39113609";       // default for XAMPP
+$password = "ecaPassword";           // default for XAMPP
+$dbname = "if0_39113609_XXX "; // change this to your actual DB name
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
