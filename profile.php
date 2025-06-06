@@ -25,7 +25,7 @@ $stmt->close();
 
 
 
-$stmt = $conn->prepare("SELECT username, email FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT username, email, number FROM users WHERE id = ?");
 if ($stmt) {
     $stmt->bind_param("i", $userId);
     if ($stmt->execute()) {
@@ -63,6 +63,7 @@ if ($stmt) {
     
 </head>
 <body>
+    <div class="page_wrapper">
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
         <div class="container-fluid">
@@ -110,22 +111,19 @@ if ($stmt) {
         </div>
 
     </nav>
-
     
     <div class="profile-container">
         <!-- Profile Header -->
         <div class="profile-header mb-4">
             <div class="d-flex align-items-center">
-                <img src="assets/imgs/default-avatar.jpg" alt="" class="profile-avatar me-4">
+                <img src="assets/imgs/default_profile_pic.jpg" alt="" class="profile-avatar me-4">
                 <div>
                     <h2 class="mb-1"><?= htmlspecialchars($_SESSION['username'] ?? 'Guest') ?></h2>
                     
                    
                 </div>
             </div>
-            <a href="edit-profile.php" class="btn btn-outline-primary edit-btn">
-                <i class="fas fa-pencil-alt"></i> Edit Profile
-            </a>
+            
         </div>
 
         <div class="row">
@@ -136,7 +134,14 @@ if ($stmt) {
                         <li class="nav-item">
                             <a class="nav-link active" href="#"><i class="fas fa-user me-2"></i> My Profile</a>
                         </li>
-                        <li>
+
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="admin.php"><i class="fas fa-cogs me-2"></i> Admin Panel</a>
+                            </li>
+                        <?php endif; ?>
+
+                        <li class="nav-item">
                             <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
                         </li>
                     </ul>
@@ -153,8 +158,9 @@ if ($stmt) {
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h5 class="mb-1"> Username: <?= htmlspecialchars($_SESSION['username'] ?? 'Guest') ?></h5>
                                 
+                                
+                                <h5 class="mb-1"> Number: <?= htmlspecialchars($user['number'] ?? 'Not available') ?></h5>
                                 
                             </div>
                             <div class="col-md-6">
@@ -183,7 +189,7 @@ if ($stmt) {
                                 <?php foreach ($listings as $product): ?>
                                     <div class="col-md-4 mb-3">
                                         <div class="card h-100">
-                                            <img src="assets/imgs/<?= htmlspecialchars($product['image'] ?? 'default-listing.jpg') ?>" 
+                                            <img src="assets/imgs/<?= htmlspecialchars($product['image'] ?? 'default_listing.jpg') ?>" 
                                                 class="card-img-top" 
                                                 alt="<?= htmlspecialchars($product['name']) ?>">
                                             <div class="card-body">
@@ -191,6 +197,12 @@ if ($stmt) {
                                                 <p class="card-text">R<?= number_format($product['price'], 2) ?></p>
                                                 
                                                 <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-sm btn-outline-primary">View</a>
+                                                <form action="delete_listing.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger mt-2">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +221,7 @@ if ($stmt) {
             </div>
         </div>
     </div>
-
+    </div>
     <footer class="mt-3 py-3">
         <div class="row container">
 

@@ -1,9 +1,30 @@
 <?php
 session_start();
-?>
+include('assets/server/db.php');
 
-<!doctype html>
-<html lang="en">
+if (!isset($_GET['seller_id']) || !is_numeric($_GET['seller_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+$sellerId = intval($_GET['seller_id']);
+
+
+$stmt = $conn->prepare("SELECT username, email, number FROM users WHERE id = ?");
+$stmt->bind_param("i", $sellerId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+   
+    echo "Seller not found.";
+    exit();
+}
+
+$seller = $result->fetch_assoc();
+
+$stmt->close();
+?>
 
 <head>
     <meta charset="utf-8">
@@ -12,12 +33,15 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
     <div class="page_wrapper">
+
     <!-- navigation bar -->
+    
     <nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
         <div class="container-fluid">
             
@@ -65,29 +89,15 @@ session_start();
 
     </nav>
 
-
-
-    <section id="support">
-        <div class="">
-            <h2>Welcome to support</h2>
-            <h4>FAQ</h4>
-            <br><br>
-            <h3>What is Home Of The Boards?</h3>
-            <h5>It is a second hand boardgame marketplace where games can get together to sell their old games.</h5>
-            <br><br>
-            <h3>Is All Games Sold By HomeOfTheBoards been refurbished?</h3>
-            <h5>Yes!</h5>
-            <br><br>
-            <h3>How do I buy a game on the platform?</h3>
-            <h5>Click on contact the seller, on the listing and message or call them from there.</h5>    
-            <br><br>
-            
-            
-        
-            
+    <div class="container mt-5">
+        <h2>Contact Seller</h2>
+        <div class="card p-4" style="max-width: 500px;">
+            <h4><?= htmlspecialchars($seller['username']) ?></h4>
+            <p><strong>Email:</strong> <a href="mailto:<?= htmlspecialchars($seller['email']) ?>"><?= htmlspecialchars($seller['email']) ?></a></p>
+            <p><strong>Phone Number:</strong> <?= htmlspecialchars($seller['number'] ?? 'Not available') ?></p>
+            <a href="javascript:history.back()" class="btn btn-secondary mt-3">Go Back</a>
         </div>
-    </section>
-
+    </div>
     </div>
     <footer class="mt-3 py-3">
         <div class="row container">
@@ -110,16 +120,13 @@ session_start();
                 </div>
             </div>
         </div>
+    
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous">
+    </script>
     
-
-
-    
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-            crossorigin="anonymous">
-        </script>
 </body>
-
 </html>

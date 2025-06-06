@@ -2,7 +2,6 @@
 session_start();
 require 'assets/server/db.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 $errors = [];
 $success = false;
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $price = floatval($_POST['price']);
@@ -19,19 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $condition = $_POST['condition'];
     $imageName = null;
 
-    // Validate inputs
     if (empty($name)) $errors[] = "Product name is required.";
     if ($price <= 0) $errors[] = "Price must be a positive number.";
     if (empty($description)) $errors[] = "Description is required.";
     if (empty($condition)) $errors[] = "Condition is required.";
 
-    // Handle image upload
+    
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'assets/imgs/';
         $imageName = basename($_FILES['image']['name']);
         $targetPath = $uploadDir . $imageName;
 
-        // Move uploaded file
+        
         if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
             $errors[] = "Failed to upload image.";
         }
@@ -39,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Product image is required.";
     }
 
-    // Insert into database if valid
+   
     if (empty($errors)) {
         $stmt = $conn->prepare("INSERT INTO products (name, price, image, description, `condition`, seller_id) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sdsssi", $name, $price, $imageName, $description, $condition, $_SESSION['user_id']);
@@ -63,7 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
+<body>
+    <div class="page_wrapper">
+    <nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
         <div class="container-fluid">
             
             <a href="index.php">
@@ -110,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </nav>
 
-<div class="container py-5" style="max-width: 700px;">
+    <div class="container py-5" style="max-width: 700px;">
 
     <h2 class="mb-4">Create New Listing</h2>
 
@@ -163,13 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-primary">Create Listing</button>
         <a href="profile.php" class="btn btn-secondary ms-2">Cancel</a>
     </form>
-</div>
+    </div>
+    </div>
 
-<footer class="mt-3 py-3">
+    <footer class="mt-3 py-3">
         <div class="row container">
-
-           
-
             <div class="col-lg-9 col-md-12 ps-lg-5">
                 <div class="row justify-content-start">
                     <div class="col-lg-4 col-md-4 col-sm-12">

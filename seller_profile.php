@@ -2,14 +2,14 @@
 session_start();
 require 'assets/server/db.php';
 
-// Check if seller ID is in the query string
+
 if (!isset($_GET['id'])) {
     die("Seller ID not specified.");
 }
 
 $sellerId = (int)$_GET['id'];
 
-// Get seller's username (public info only)
+
 $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
 $stmt->bind_param("i", $sellerId);
 $stmt->execute();
@@ -21,7 +21,7 @@ if ($result->num_rows === 0) {
 
 $seller = $result->fetch_assoc();
 
-// Get seller's listings
+
 $listings = [];
 $stmt = $conn->prepare("SELECT id, name, price, image FROM products WHERE seller_id = ?");
 $stmt->bind_param("i", $sellerId);
@@ -101,7 +101,7 @@ $stmt->close();
 
 <div class="container mt-5 pt-5">
     <div class="profile-header mb-4 d-flex align-items-center">
-        <img src="assets/imgs/default-avatar.jpg" alt="" class="profile-avatar me-4">
+        <img src="assets/imgs/default_profile_pic.jpg" alt="" class="profile-avatar me-4">
         <div>
             <h2 class="mb-1"><?= htmlspecialchars($seller['username']) ?></h2>
             <p class="text-muted">Seller on HomeOfTheBoards</p>
@@ -136,11 +136,28 @@ $stmt->close();
     </div>
 </div>
 
-<footer class="mt-5 py-3">
-    <div class="container text-center">
-        <p>&copy; <?= date('Y') ?> HomeOfTheBoards</p>
-    </div>
-</footer>
+<footer class="mt-3 py-3">
+        <div class="row container">
+            <div class="col-lg-9 col-md-12 ps-lg-5">
+                <div class="row justify-content-start">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Phone</h4>
+                        <p>123 456 7890</p>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Address</h4>
+                        <p>Somewhere in Cape Town</p>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Email</h4>
+                        <p>HomeOfTheBoards@hotmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>

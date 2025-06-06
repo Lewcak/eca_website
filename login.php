@@ -1,10 +1,10 @@
 <?php
 session_start();
-include('assets/server/db.php'); // Make sure this sets up a MySQLi $conn object
+include('assets/server/db.php'); 
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
@@ -16,13 +16,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $result = $stmt->get_result();
         
-        if ($result->num_rows == 1) {
+        if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
             
             if (password_verify($password, $user['password'])) {
+               
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                header("Location: index.php");
+                
+                $_SESSION['role'] = strtolower($user['role']); 
+                
+               
+                $_SESSION['admin'] = intval($user['admin']);
+
+
+
+                
+                if ($_SESSION['admin'] === 1) {
+                    header("Location: admin.php"); 
+                } else {
+                    header("Location: index.php");
+                }
                 exit();
             } else {
                 $error = 'Invalid password.';
@@ -30,114 +44,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $error = 'Email not found.';
         }
-        
         $stmt->close();
     }
 }
 ?>
 
-
-
 <!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login | HomeOfTheBoards</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 
 <body>
-    <!-- Navigation Bar (Same as your other pages) -->
     <nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
         <div class="container-fluid">
-            
             <a href="index.php">
-                <img src="assets/imgs/logo.jpg" alt="Logo" class="navbar-logo" style="height: 70px; width: auto;">
+                <img src="assets/imgs/logo.jpg" alt="Logo" class="navbar-logo" style="height: 70px; width: auto;" />
             </a>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse nav-buttons" id="navbarNav">
                 <ul class="navbar-nav nav-buttons ms-auto">
-
                     <li class="nav-item">
                         <a class="nav-link" href="shop.php">Shop</a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="support.php">Support</a>
                     </li>
-
-                    
-
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        
+                    <?php if (isset($_SESSION['user_id'])) : ?>
                         <li class="nav-item">
                             <a class="nav-link" href="profile.php">
                                 <i class="fas fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?>
                             </a>
                         </li>
-                        
-                        <?php else: ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="login.php">
-                                    <i class="fas fa-user"></i> Login
-                                </a>
-                            </li>
-                        <?php endif; 
-                    ?>
-                    
+                    <?php else : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.php">
+                                <i class="fas fa-user"></i> Login
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
-
     </nav>
 
-    <!-- Main Login Content -->
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <img src="assets/imgs/logo.jpg" alt="HomeOfTheBoards Logo">
+    <div class="login-container" style="margin-top:120px;">
+        <div class="login-card mx-auto" style="max-width: 400px;">
+            <div class="login-header text-center mb-4">
+                <img src="assets/imgs/logo.jpg" alt="HomeOfTheBoards Logo" class="mb-3" />
                 <h2>Member Login</h2>
                 <p class="text-muted">Sign in to your account</p>
             </div>
-            
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
 
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+
+            <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" novalidate>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required
+                        value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" />
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required />
                 </div>
-                
-                
-                
-                <button type="submit" class="btn btn-primary btn-login">Login</button>
-                
-                <div class="login-links">
-                    
+
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                <div class="login-links mt-3 text-center">
                     <p class="text-muted">Don't have an account? <a href="registration.php">Register here</a></p>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-5 py-5">
-        <div class="row container">
-            
+    <footer class="mt-3 py-3">
+        <div class="row container mx-auto">
             <div class="col-lg-9 col-md-12 ps-lg-5">
                 <div class="row justify-content-start">
                     <div class="col-lg-4 col-md-4 col-sm-12">
@@ -157,9 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-        crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

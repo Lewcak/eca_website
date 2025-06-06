@@ -27,6 +27,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 </head>
 
 <body>
+    <div class="page_wrapper">
 
     <!-- navigation bar -->
     
@@ -118,13 +119,12 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
          <?php endforeach; ?>
         </div>
     </section>
+    
+    </div>
 
     <!--Footer-->
     <footer class="mt-3 py-3">
         <div class="row container">
-
-           
-
             <div class="col-lg-9 col-md-12 ps-lg-5">
                 <div class="row justify-content-start">
                     <div class="col-lg-4 col-md-4 col-sm-12">
@@ -149,6 +149,9 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
         crossorigin="anonymous">
+
+
+        
     </script>
 
 </body>

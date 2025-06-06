@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('assets/server/db.php'); // uses mysqli
+include('assets/server/db.php'); 
 
 $error = '';
 $success = '';
@@ -8,17 +8,18 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
+    $number = trim($_POST['number']);
     $password = $_POST['password'];
     
-    // Basic validation
-    if (empty($username) || empty($email) || empty($password)) {
+    
+    if (empty($username) || empty($email) || empty($number) || empty($password)) {
         $error = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } elseif (strlen($password) < 8) {
         $error = "Password must be at least 8 characters.";
     } else {
-        // Check if user exists
+        
         $check = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
         $check->bind_param("ss", $username, $email);
         $check->execute();
@@ -27,16 +28,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($check->num_rows > 0) {
             $error = "Username or email already exists.";
         } else {
-            // Insert new user
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $username, $email, $hashed_password);
             
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
-                header("Location: login.php"); // redirect after success
-                exit;
-            } else {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO users (username, email, number, password) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $username, $email,$number, $hashed_password);
+            
+            if ($stmt->execute()) 
+            {
+            $_SESSION['user_id'] = $conn->insert_id;
+            $_SESSION['username'] = $username;
+            header("Location: index.php");
+            exit;
+            }
+            else {
                 $error = "Registration failed. Try again.";
             }
         }

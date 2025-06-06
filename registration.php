@@ -89,7 +89,13 @@ include('assets/server/db.php');
                     <label for="email" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
                 </div>
+
+                <div class="mb-3">
+                    <label for="number" class="form-label">Cellphone Number:</label>
+                    <input type="tel" class="form-control" id="number" name="number" placeholder="Enter your cellphone number" pattern="[0-9]{10}" required>
+                </div>
                 
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
@@ -108,19 +114,20 @@ include('assets/server/db.php');
     </div>
 
     <!-- Footer -->
-    <footer class="mt-5 py-5">
+    <footer class="mt-3 py-3">
         <div class="row container">
-            
             <div class="col-lg-9 col-md-12 ps-lg-5">
                 <div class="row justify-content-start">
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <h4>Phone</h4>
                         <p>123 456 7890</p>
                     </div>
+
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <h4>Address</h4>
                         <p>Somewhere in Cape Town</p>
                     </div>
+
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <h4>Email</h4>
                         <p>HomeOfTheBoards@hotmail.com</p>

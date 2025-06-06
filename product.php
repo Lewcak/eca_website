@@ -40,7 +40,7 @@ $product = $result->fetch_assoc();
 </head>
 
 <body>
-
+<div class="page_wrapper">
 <nav class="navbar navbar-expand-lg custom-navbar py-3 fixed-top">
         <div class="container-fluid">
             
@@ -124,10 +124,9 @@ $product = $result->fetch_assoc();
                 
 
                 <div class="d-flex align-items-center mb-4">
-                    <button class="btn btn-danger ms-3 add-to-cart" data-id="<?php echo $product['id']; ?>">
-                        <i class="fa fa-shopping-cart me-2"></i>Contact Seller
-                    </button>
-    
+                    <a href="contact_seller.php?seller_id=<?= $product['seller_id'] ?>" class="btn btn-danger ms-3">
+                        <i class="fa fa-envelope me-2"></i>Contact Seller
+                     </a>
                 </div>
 
                 
@@ -153,7 +152,7 @@ $product = $result->fetch_assoc();
         </div>
     </div>
 </section>
-
+</div>
 <footer class="mt-3 py-3">
     <div class="row container">
         <div class="col-lg-4 col-md-4 col-sm-12">

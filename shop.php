@@ -2,10 +2,10 @@
 session_start();
 ?>
 <?php
-// Connect to database
+
 include('assets/server/db.php');
 
-// Fetch the product (assuming ID = 1 for example)
+
 $product_id = 1;
 $stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->bind_param("i", $product_id);
@@ -105,33 +105,33 @@ $products = $stmt->fetch_all(MYSQLI_ASSOC);
     
 
 
-        <footer class="mt-5 py-5">
-            <div class="row container">
-                <div class="col-lg-9 col-md-12 ps-lg-5">
-                    <div class="row justify-content-start">
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <h4>Phone</h4>
-                            <p>123 456 7890</p>
-                        </div>
+    <footer class="mt-3 py-3">
+        <div class="row container">
+            <div class="col-lg-9 col-md-12 ps-lg-5">
+                <div class="row justify-content-start">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Phone</h4>
+                        <p>123 456 7890</p>
+                    </div>
 
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <h4>Address</h4>
-                            <p>Somewhere in Cape Town</p>
-                        </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Address</h4>
+                        <p>Somewhere in Cape Town</p>
+                    </div>
 
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <h4>Email</h4>
-                            <p>HomeOfTheBoards@hotmail.com</p>
-                        </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <h4>Email</h4>
+                        <p>HomeOfTheBoards@hotmail.com</p>
                     </div>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
             crossorigin="anonymous">
-        </script>
+    </script>
 </body>
 
 </html>
