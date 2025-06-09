@@ -116,11 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" />
                 </div>
 
-                <div class="mb-3">
+               <div class="mb-3 position-relative">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required />
+                    <input type="password" id="password" name="password" class="form-control pe-5" placeholder="Enter your password" required />
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3" onclick="togglePassword()" style="cursor: pointer;">
+                        <i id="eye-icon" class="fa-solid fa-eye text-muted"></i>
+                    </span>
                 </div>
-
+                
                 <button type="submit" class="btn btn-primary w-100">Login</button>
 
                 <div class="login-links mt-3 text-center">
@@ -150,8 +153,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </footer>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    </script>
+
+    
 </body>
 
 </html>
